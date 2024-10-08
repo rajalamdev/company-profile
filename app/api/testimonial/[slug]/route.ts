@@ -3,8 +3,6 @@ import { getServerSession } from "next-auth"
 
 export async function GET(req: Request, { params }: any ){
     const slug = String(params.slug)
-    const session = await getServerSession()
-    if (!session?.user) return new Response('Error', {status: 401})
     try {
         const result = await prisma.testimonials.findFirst({
             where: {
@@ -25,7 +23,8 @@ export async function GET(req: Request, { params }: any ){
 }
 
 export async function DELETE(req: Request, { params }: any ){
-    const slug = String(params.slug)
+    try {
+        const slug = String(params.slug)
     const result = await prisma.testimonials.delete({
         where: {
             id: slug
@@ -36,6 +35,9 @@ export async function DELETE(req: Request, { params }: any ){
         message: "Success",
         result
     })
+    } catch (error) {
+        return Response.json({ status: 500, message: error, result: error });
+    }
 }
 
 export async function PUT(req: Request, { params }: any ){

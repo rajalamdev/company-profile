@@ -4,9 +4,6 @@ import { prisma } from "@/app/lib/prisma";
 import {getServerSession} from "next-auth";
 
 export async function GET(req: Request, res: Response){
-    const session = await getServerSession()
-    if (!session?.user) return new Response('Error', {status: 401})
-    // console.log(session.user.email)
     try {
         const result = await prisma.testimonials.findMany()
         
@@ -24,8 +21,6 @@ export async function GET(req: Request, res: Response){
 }
 
 export async function POST(req: Request){
-    // const session = await getServerSession()
-    // if (session?.user) return new Response('Error', {status: 401})
     const res = await req.json()
     const { name, message, featured, job} = res
 
